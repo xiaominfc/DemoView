@@ -75,7 +75,6 @@ extension UIViewController {
     }
     func setContentView(layout:String) {
         let doc = XMLDoc.parseFile(file: layout)
-        self.view.layoutMargins = UIEdgeInsetsMake(64, 0, 0, 0)
         self.view.layoutAndInit(node: doc.rootNode!)
     }
 }
