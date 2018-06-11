@@ -61,8 +61,7 @@ extension UITableView {
         }
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: identifier)
         if identifier.hasSuffix(".xml") {
-            let doc = XMLDoc.parseFile(file: identifier);
-            cell.layoutAndInit(node: doc.rootNode!)
+            cell.layoutSelfByXml(xmlPath: identifier)
         }
         return cell
     }
@@ -74,8 +73,7 @@ extension UIViewController {
         setContentView(layout: layout)
     }
     func setContentView(layout:String) {
-        let doc = XMLDoc.parseFile(file: layout)
-        self.view.layoutAndInit(node: doc.rootNode!)
+        self.view.layoutSelfByXml(xmlPath: layout)
     }
 }
 

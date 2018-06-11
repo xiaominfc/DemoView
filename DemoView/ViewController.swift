@@ -38,7 +38,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func doAddAction(sender:AnyClass) {
-    
         let editViewController = EditViewController()
         self.navigationController?.pushViewController(editViewController, animated: true)
     }

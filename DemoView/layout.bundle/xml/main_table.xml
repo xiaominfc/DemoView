@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout id="main"
     >
-    <TableView
+    <UITableView
         id="tableview"
         height="parent"
         width="parent"
         bottom_of_align="parent"
-        >
-    </TableView>
+        />
 </RelativeLayout>

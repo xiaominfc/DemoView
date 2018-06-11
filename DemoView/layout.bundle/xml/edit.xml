@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<View
-    width="parent"
-    height="parent"
-    >
 <RelativeLayout id="main"
     background_color="#ffffff"
-    width="parent"
-    height="parent"
-    bottom_of_align="parent"
     >
-    <ImageView
+    <UIImageView
         top_of_align="parent"
         margin_top="84"
         corner="5"
@@ -18,8 +11,7 @@
         height="60"
         src="header"
         center_v_parent="true"
-        >
-    </ImageView>
+        />
     <RelativeLayout
         border="1"
         corner="3"
@@ -32,23 +24,21 @@
         right_of_align="parent"
         border_color="#11000000"
         >
-        <TextField
+        <UITextField
             height="50"
             left_of_parent="true"
             right_of_parent="true"
             margin_left="8"
             margin_right="8"
             placeholder="账号:"
-            >
-        </TextField>
-        <View
+            />
+        <UIView
             width="parent"
             height="1"
             background_color="#11000000"
             center_h_parent="true"
-            >
-        </View>
-        <TextField
+            />
+        <UITextField
             height="50"
             left_of_align="parent"
             right_of_align="parent"
@@ -57,10 +47,6 @@
             margin_right="8"
             placeholder="密码:"
             content_type="password"
-            >
-        </TextField>
+            />
     </RelativeLayout>
-    
-    
 </RelativeLayout>
-</View>

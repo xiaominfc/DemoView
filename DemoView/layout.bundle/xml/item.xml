@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TableViewCell
+<UITableViewCell
     >
     <RelativeLayout id="main"
         width="parent"
         height="parent"
         margin_left="10"
         >
-        <Label
+        <UILabel
             id="title_label"
             text="xiaominfc"
             text_color="#0000ff"
@@ -15,17 +15,17 @@
             right_of="header_image"
             center_h_parent="true"
             offset_h="-10"
-            >
-        </Label>
-        <Label
+            />
+        
+        <UILabel
             text="hello world"
             font="14"
             margin_top="8"
             left_of_align="title_label"
             bottom_of="title_label"
-            >
-        </Label>
-        <ImageView
+            />
+        
+        <UIImageView
             corner="5"
             id="header_image"
             width="60"
@@ -34,15 +34,14 @@
             center_h_parent="true"
             left_of_parent="true"
             margin_left="10"
-            >
-        </ImageView>
-        <View
+            />
+        
+        <UIView
             width="parent"
             height="0.5"
             bottom_of_parent="true"
             center_v_parent="true"
             background_color="#11000000"
-            >
-        </View>
+            />
     </RelativeLayout>
-</TableViewCell>
+</UITableViewCell>
