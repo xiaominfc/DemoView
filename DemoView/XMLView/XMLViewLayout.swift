@@ -364,10 +364,10 @@ class RelativeLayoutParams: LayoutParams {
     var center_v_parent: String?
     var center_h_parent: String?
     
-    var top_of_parent: String?
-    var bottom_of_parent: String?
-    var left_of_parent: String?
-    var right_of_parent: String?
+    var top_of_align: String?
+    var bottom_of_align: String?
+    var left_of_align: String?
+    var right_of_align: String?
     
     var offset_v:CGFloat = 0.0
     var offset_h:CGFloat = 0.0
@@ -382,10 +382,10 @@ class RelativeLayoutParams: LayoutParams {
         self.center_h_parent = node.attri("center_h_parent")
         self.center_v_of = node.attri("center_v_of")
         self.center_h_of = node.attri("center_h_of")
-        self.top_of_parent = node.attri("top_of_parent")
-        self.bottom_of_parent = node.attri("bottom_of_parent")
-        self.left_of_parent = node.attri("left_of_parent")
-        self.right_of_parent = node.attri("right_of_parent")
+        self.top_of_align = node.attri("top_of_align")
+        self.bottom_of_align = node.attri("bottom_of_align")
+        self.left_of_align = node.attri("left_of_align")
+        self.right_of_align = node.attri("right_of_align")
         let defaultValue:Float = 0.0
         self.offset_v = CGFloat(attriForNode(node: node, name: "offset_v", defaultValue: defaultValue));
         self.offset_h = CGFloat(attriForNode(node: node, name: "offset_h", defaultValue: defaultValue));
@@ -435,7 +435,18 @@ extension UIView {
         }
     }
     
-    func findViewById(_ idStr:String, _ recursive: Bool = false) ->UIView?{
+    func findViewById(_ idStr:String?, _ recursive: Bool = false) ->UIView?{
+        
+        
+        if idStr == nil {
+            return nil
+        }
+        
+        if idStr == "parent" {
+            return self
+        }
+        
+        
         var view:UIView?
         for child in self.subviews {
             if let view_id = child.idStr{
@@ -451,7 +462,7 @@ extension UIView {
                 }
             }
         }
-        return view;
+        return view
     }
     
     func childCenterY(_ child:UIView,_ targetView:UIView, offset:CGFloat) {
@@ -466,6 +477,11 @@ extension UIView {
     
     func childParentSide(_ child:UIView,margin:CGFloat, attribute: NSLayoutAttribute) {
         let con =  NSLayoutConstraint(item: child, attribute: attribute, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: attribute, multiplier: 1, constant: margin)
+        self.addConstraint(con)
+    }
+    
+    func layoutViewToSide(_ child:UIView, targetView:UIView, margin:CGFloat, attribute: NSLayoutAttribute) {
+        let con =  NSLayoutConstraint(item: child, attribute: attribute, relatedBy: NSLayoutRelation.equal, toItem: targetView, attribute: attribute, multiplier: 1, constant: margin)
         self.addConstraint(con)
     }
 }
@@ -498,9 +514,11 @@ class RelativeLayout : UIView {
                 self.addConstraint(con)
                 result = RelativeLayoutSide.Left.rawValue
             }
-            if mLayoutParams.right_of_parent != nil {
-                childParentSide(child, margin: mLayoutParams.marginRight, attribute: NSLayoutAttribute.trailing)
-                result = result + RelativeLayoutSide.Right.rawValue
+            if mLayoutParams.right_of_align != nil {
+                if let relayoutView = self.findViewById(mLayoutParams.right_of_align!) {
+                    layoutViewToSide(child, targetView: relayoutView, margin: mLayoutParams.marginRight, attribute: NSLayoutAttribute.trailing)
+                    result = result + RelativeLayoutSide.Right.rawValue
+                }
             }
         }
         
@@ -511,16 +529,25 @@ class RelativeLayout : UIView {
                     self.addConstraint(con)
                     result = result + RelativeLayoutSide.Right.rawValue
                 }
-            }else if mLayoutParams.right_of_parent != nil {
-                childParentSide(child, margin: mLayoutParams.marginRight, attribute: NSLayoutAttribute.trailing)
-                result = result + RelativeLayoutSide.Right.rawValue
+            }else if mLayoutParams.right_of_align != nil {
+                if let relayoutView = self.findViewById(mLayoutParams.right_of_align!) {
+                    layoutViewToSide(child, targetView: relayoutView, margin: mLayoutParams.marginRight, attribute: NSLayoutAttribute.trailing)
+                    result = result + RelativeLayoutSide.Right.rawValue
+                }
             }
         }
 
         
-        if result == 0 ||  mLayoutParams.left_of_parent != nil {
-            childParentSide(child, margin: mLayoutParams.marginLeft, attribute: NSLayoutAttribute.leading)
-            result = RelativeLayoutSide.Left.rawValue
+        var targetView:UIView? = nil
+        if let relayoutView = self.findViewById(mLayoutParams.left_of_align) {
+            targetView = relayoutView
+        }else if result == 0 {
+            targetView = self
+        }
+        
+        if targetView != nil {
+            layoutViewToSide(child, targetView: targetView!, margin: mLayoutParams.marginLeft, attribute: NSLayoutAttribute.leading)
+            result = result + RelativeLayoutSide.Left.rawValue
         }
         return result;
     }
@@ -545,31 +572,45 @@ class RelativeLayout : UIView {
                 self.addConstraint(con)
                 result = RelativeLayoutSide.Top.rawValue
             }
-            if mLayoutParams.bottom_of_parent != nil {
-                childParentSide(child, margin: mLayoutParams.marginBottom, attribute: NSLayoutAttribute.bottom)
-                result = result + RelativeLayoutSide.Bottom.rawValue
+            if mLayoutParams.bottom_of_align != nil {
+                if let relayoutView = self.findViewById(mLayoutParams.bottom_of_align!) {
+                    layoutViewToSide(child, targetView: relayoutView, margin: mLayoutParams.marginBottom, attribute: NSLayoutAttribute.bottom)
+                    result = result + RelativeLayoutSide.Bottom.rawValue
+                }
             }
         }
         
         if result&RelativeLayoutSide.Bottom.rawValue != RelativeLayoutSide.Bottom.rawValue {
             if mLayoutParams.topOf != nil{
-                if let relayoutView = self.findViewById(mLayoutParams.topOf!) {
+                if let relayoutView = self.findViewById(mLayoutParams.topOf) {
                     let con =  NSLayoutConstraint(item: child, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: relayoutView, attribute: NSLayoutAttribute.top, multiplier: 1, constant: mLayoutParams.marginBottom)
                     self.addConstraint(con)
                     result = result + RelativeLayoutSide.Bottom.rawValue
                 }
-            } else if mLayoutParams.bottom_of_parent != nil {
-                childParentSide(child, margin: mLayoutParams.marginBottom, attribute: NSLayoutAttribute.bottom)
-                result = result + RelativeLayoutSide.Bottom.rawValue
+            } else if mLayoutParams.bottom_of_align != nil {
+                
+                if let relayoutView = self.findViewById(mLayoutParams.bottom_of_align) {
+                    layoutViewToSide(child, targetView: relayoutView, margin: mLayoutParams.marginBottom, attribute: NSLayoutAttribute.bottom)
+                    result = result + RelativeLayoutSide.Bottom.rawValue
+                }
             }
         }
-
         
-        if result == 0 || mLayoutParams.top_of_parent != nil {
-            let margin =  mLayoutParams.marginTop
-            childParentSide(child, margin: margin, attribute: NSLayoutAttribute.top)
-            result = RelativeLayoutSide.Top.rawValue
+    
+        var targetView:UIView? = nil
+        if let relayoutView = self.findViewById(mLayoutParams.top_of_align) {
+            targetView = relayoutView
+        }else if result == 0 {
+            targetView = self
         }
+        
+        if targetView != nil {
+            layoutViewToSide(child, targetView: targetView!, margin: mLayoutParams.marginTop, attribute: NSLayoutAttribute.top)
+            result = result + RelativeLayoutSide.Top.rawValue
+        }
+        
+        
+        
         return result;
     }
     

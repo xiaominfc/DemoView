@@ -5,7 +5,7 @@
         id="tableview"
         height="parent"
         width="parent"
-        bottom_of_parent="true"
+        bottom_of_align="parent"
         >
     </TableView>
 </RelativeLayout>

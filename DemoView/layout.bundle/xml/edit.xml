@@ -7,10 +7,10 @@
     background_color="#ffffff"
     width="parent"
     height="parent"
-    bottom_of_parent="true"
+    bottom_of_align="parent"
     >
     <ImageView
-        top_of_parent="true"
+        top_of_align="parent"
         margin_top="84"
         corner="5"
         id="header_image"
@@ -28,8 +28,8 @@
         margin_left="20"
         margin_right="20"
         margin_top="20"
-        left_of_parent="true"
-        right_of_parent="true"
+        left_of_align="parent"
+        right_of_align="parent"
         border_color="#11000000"
         >
         <TextField
@@ -50,9 +50,9 @@
         </View>
         <TextField
             height="50"
-            left_of_parent="true"
-            right_of_parent="true"
-            bottom_of_parent="true"
+            left_of_align="parent"
+            right_of_align="parent"
+            bottom_of_align="parent"
             margin_left="8"
             margin_right="8"
             placeholder="密码:"

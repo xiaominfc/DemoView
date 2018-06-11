@@ -20,9 +20,8 @@
         <Label
             text="hello world"
             font="14"
-            margin_left="8"
             margin_top="8"
-            right_of="header_image"
+            left_of_align="title_label"
             bottom_of="title_label"
             >
         </Label>
