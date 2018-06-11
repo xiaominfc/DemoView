@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableViewCell
+    >
+    <RelativeLayout id="main"
+        width="parent"
+        height="parent"
+        margin_left="10"
+        >
+        <Label
+            id="title_label"
+            text="xiaominfc"
+            text_color="#0000ff"
+            font="18"
+            margin_left="8"
+            right_of="header_image"
+            center_h_parent="true"
+            offset_h="-10"
+            >
+        </Label>
+        <Label
+            text="hello world"
+            font="14"
+            margin_left="8"
+            margin_top="8"
+            right_of="header_image"
+            bottom_of="title_label"
+            >
+        </Label>
+        <ImageView
+            corner="5"
+            id="header_image"
+            width="60"
+            height="60"
+            src="header"
+            center_h_parent="true"
+            left_of_parent="true"
+            margin_left="10"
+            >
+        </ImageView>
+        <View
+            width="parent"
+            height="0.5"
+            bottom_of_parent="true"
+            center_v_parent="true"
+            background_color="#11000000"
+            >
+        </View>
+    </RelativeLayout>
+</TableViewCell>

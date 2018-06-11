@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View
+    width="parent"
+    height="parent"
+    >
+<RelativeLayout id="main"
+    background_color="#ffffff"
+    width="parent"
+    height="parent"
+    bottom_of_parent="true"
+    >
+    <ImageView
+        top_of_parent="true"
+        margin_top="84"
+        corner="5"
+        id="header_image"
+        width="60"
+        height="60"
+        src="header"
+        center_v_parent="true"
+        >
+    </ImageView>
+    <RelativeLayout
+        border="1"
+        corner="3"
+        height="101"
+        bottom_of="header_image"
+        margin_left="20"
+        margin_right="20"
+        margin_top="20"
+        left_of_parent="true"
+        right_of_parent="true"
+        border_color="#11000000"
+        >
+        <TextField
+            height="50"
+            left_of_parent="true"
+            right_of_parent="true"
+            margin_left="8"
+            margin_right="8"
+            placeholder="账号:"
+            >
+        </TextField>
+        <View
+            width="parent"
+            height="1"
+            background_color="#11000000"
+            center_h_parent="true"
+            >
+        </View>
+        <TextField
+            height="50"
+            left_of_parent="true"
+            right_of_parent="true"
+            bottom_of_parent="true"
+            margin_left="8"
+            margin_right="8"
+            placeholder="密码:"
+            content_type="password"
+            >
+        </TextField>
+    </RelativeLayout>
+    
+    
+</RelativeLayout>
+</View>

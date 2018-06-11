@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout id="main"
+    background_color="#ff0000"
+    left_of_parent="true"
+    top_of_parent="true"
+    right_of_parent="true"
+    bottom_of_parent="true"
+    background_color="#ffffff"
+    >
+    <Label
+        id="title_label"
+        title="xiaominfc"
+        text_color="#0000ff"
+        font="18"
+        margin_left="8"
+        right_of="header_image"
+        center_h_parent="true"
+        offset_h="-10"
+        >
+    </Label>
+    <Label
+        title="hello world"
+        font="14"
+        margin_left="8"
+        margin_top="8"
+        right_of="header_image"
+        bottom_of="title_label"
+        >
+    </Label>
+    <ImageView
+        corner="5"
+        id="header_image"
+        frame_w="100"
+        frame_h="100"
+        src="header"
+        center_h_parent="true"
+        left_of_parent="true"
+        margin_left="20"
+        >
+    </ImageView>
+    
+    <Button
+        title="test"
+        center_v_parent="true"
+        left_of_parent="true"
+        right_of_parent="true"
+        bottom_of_parent="true"
+        margin_bottom="20"
+        >
+    </Button>
+</RelativeLayout>
