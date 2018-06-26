@@ -16,7 +16,7 @@ class EditViewController: UIViewController {
         self.title = "添加记录"
         self.tabBarController?.tabBar.isHidden = true
         
-        if let path = ViewFatoryHelper.layout_path(name: "edit") {
+        if let path = ViewFatoryHelper.layout_path(name: "edit_2") {
             setContentView(layout: path)
         }
         

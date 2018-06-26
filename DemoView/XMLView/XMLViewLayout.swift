@@ -71,17 +71,38 @@ class BaseViewAttri {
 }
 
 
-class RelativeLayoutAttri: BaseViewAttri {
-    
-    override func tagName() -> String {
-        return String(describing: RelativeLayout.self)
-    }
+
+class BaseTemplateAttri<T:UIView>:BaseViewAttri {
     
     override func instanceView() -> UIView {
-        return RelativeLayout()
+        return T()
     }
     
+    override func tagName() -> String {
+        return String(describing: T.self)
+    }
     
+}
+
+class LinearLayoutAttri: BaseTemplateAttri<LinearLayout> {
+    override func layoutByRules(_ rootView:UIView){
+        var lastChild:UIView? = nil;
+        for  child in rootView.subviews {
+            child.translatesAutoresizingMaskIntoConstraints = false;
+            let mLayoutParams:LayoutParams = child.layoutParams!
+            
+            if lastChild == nil {
+                rootView.layoutViewToSide(child, targetView: rootView, margin: mLayoutParams.marginTop, attribute: NSLayoutAttribute.top)
+            }else {
+                let con =  NSLayoutConstraint(item: child, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: lastChild, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: mLayoutParams.marginTop)
+                rootView.addConstraint(con)
+            }
+            lastChild = child;
+        }
+    }
+}
+
+class RelativeLayoutAttri: BaseTemplateAttri<RelativeLayout> {
     override func instanceLayoutParams(_ node:XMLNode) -> LayoutParams {
         return  RelativeLayoutParams(node)
     }
@@ -219,7 +240,7 @@ class RelativeLayoutAttri: BaseViewAttri {
     }
 }
 
-class UILabelAttri:BaseViewAttri {
+class UILabelAttri:BaseTemplateAttri<UILabel> {
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
         if let label = view as? UILabel {
@@ -237,19 +258,11 @@ class UILabelAttri:BaseViewAttri {
             label.sizeToFit()
         }
     }
-    
-    override func tagName() -> String {
-        return String(describing: UILabel.self)
-    }
-    
-    
-    override func instanceView() -> UIView {
-        return UILabel()
-    }
+
 }
 
 
-class UIImageViewAttri:BaseViewAttri {
+class UIImageViewAttri:BaseTemplateAttri<UIImageView> {
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
         if let imageView = view as? UIImageView {
@@ -258,19 +271,11 @@ class UIImageViewAttri:BaseViewAttri {
             }
         }
     }
-    
-    override func tagName() -> String {
-        return String(describing: UIImageView.self)
-    }
-    
-    override func instanceView() -> UIView {
-        return UIImageView()
-    }
 }
 
 
 
-class UIButtonAttri:BaseViewAttri {
+class UIButtonAttri:BaseTemplateAttri<UIButton> {
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
         if let button = view as? UIButton {
@@ -283,17 +288,9 @@ class UIButtonAttri:BaseViewAttri {
             }
         }
     }
-    
-    override func tagName() -> String {
-        return String(describing: UIButton.self)
-    }
-    
-    override func instanceView() -> UIView {
-        return UIButton()
-    }
 }
 
-class UITableViewAttri: BaseViewAttri {
+class UITableViewAttri: BaseTemplateAttri<UITableView>  {
     
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
@@ -302,35 +299,21 @@ class UITableViewAttri: BaseViewAttri {
             tableView.separatorColor = UIColor.clear
         }
     }
-    
-    override func tagName() -> String {
-        return String(describing: UITableView.self)
-    }
-    
-    override func instanceView() -> UIView {
-        return UITableView()
-    }
+
 }
 
 
-class UITableViewCellAttri: BaseViewAttri {
+class UITableViewCellAttri:  BaseTemplateAttri<UITableViewCell>   {
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
         if let cell = view as? UITableViewCell {
             cell.separatorInset = UIEdgeInsets.zero
         }
     }
-    
-    override func tagName() -> String {
-        return String(describing: UITableViewCell.self)
-    }
-    
-    override func instanceView() -> UIView {
-        return UITableViewCell()
-    }
+
 }
 
-class UINavigationBarAttri: BaseViewAttri {
+class UINavigationBarAttri: BaseTemplateAttri<UINavigationBar>    {
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
         if let nav = view as? UINavigationBar {
@@ -341,18 +324,10 @@ class UINavigationBarAttri: BaseViewAttri {
             }
         }
     }
-
-    override func tagName() -> String {
-        return String(describing: UINavigationBar.self)
-    }
-    
-    override func instanceView() -> UIView {
-        return UINavigationBar()
-    }
 }
 
 
-class UITextFieldAttri:BaseViewAttri {
+class UITextFieldAttri:BaseTemplateAttri<UITextField>    {
     
     override func bindAttriToView(node: XMLNode, view: UIView) {
         super.bindAttriToView(node: node, view: view)
@@ -369,14 +344,6 @@ class UITextFieldAttri:BaseViewAttri {
         
         }
     }
-    
-    override func tagName() -> String {
-        return String(describing: UITextField.self)
-    }
-    
-    override func instanceView() -> UIView {
-        return UITextField()
-    }
 }
 
 class ViewFatoryHelper {
@@ -392,6 +359,7 @@ class ViewFatoryHelper {
         _ = UIImageViewAttri()
         _ = UIButtonAttri()
         _ = RelativeLayoutAttri()
+        _ = LinearLayoutAttri()
         _ = UITableViewAttri()
         _ = UITableViewCellAttri()
         _ = UINavigationBarAttri()
@@ -480,7 +448,8 @@ class LayoutParams {
         if rootView != nil {
             let targetView = rootView!
             if self.width != nil {
-                child.translatesAutoresizingMaskIntoConstraints = false;
+                var needLayout = true
+                child.translatesAutoresizingMaskIntoConstraints = false
                 var multiplier:CGFloat = 0.0
                 var constant:CGFloat = 0.0
                 if let value = Float(self.width!) {
@@ -488,14 +457,23 @@ class LayoutParams {
                     child.frame.size.width = constant
                 }else {
                     multiplier = 1
-                    targetView.childCenterX(child, targetView, offset: 0);
+                    if self.marginLeft > 0 || self.marginRight > 0 {
+                        targetView.layoutViewToSide(child, targetView: targetView, margin: marginLeft, attribute: NSLayoutAttribute.leading)
+                        targetView.layoutViewToSide(child, targetView: targetView, margin: marginRight, attribute: NSLayoutAttribute.trailing)
+                        needLayout = false
+                    }else {
+                        targetView.childCenterX(child, targetView, offset: 0);
+                    }
                 }
-                let con =  NSLayoutConstraint(item: child, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: targetView , attribute: NSLayoutAttribute.width, multiplier: multiplier, constant: constant)
-                targetView.addConstraint(con)
+                if needLayout {
+                    let con =  NSLayoutConstraint(item: child, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: targetView , attribute: NSLayoutAttribute.width, multiplier: multiplier, constant: constant)
+                    targetView.addConstraint(con)
+                }
             }
             
             if self.height != nil {
                 child.translatesAutoresizingMaskIntoConstraints = false;
+                var needLayout = true
                 var multiplier:CGFloat = 0.0
                 var constant:CGFloat = 0.0
                 if let value = Float(self.height!) {
@@ -504,9 +482,18 @@ class LayoutParams {
                 }else {
                     multiplier = 1
                     targetView.childCenterY(child, targetView, offset: 0)
+                    if self.marginTop > 0 || self.marginBottom > 0 {
+                        targetView.layoutViewToSide(child, targetView: targetView, margin: marginTop, attribute: NSLayoutAttribute.top)
+                        targetView.layoutViewToSide(child, targetView: targetView, margin: marginBottom, attribute: NSLayoutAttribute.bottom)
+                        needLayout = false
+                    }else {
+                        targetView.childCenterY(child, targetView, offset: 0);
+                    }
                 }
-                let con =  NSLayoutConstraint(item: child, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: targetView , attribute: NSLayoutAttribute.height, multiplier: multiplier, constant:constant)
-                targetView.addConstraint(con)
+                if needLayout {
+                    let con =  NSLayoutConstraint(item: child, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: targetView , attribute: NSLayoutAttribute.height, multiplier: multiplier, constant:constant)
+                    targetView.addConstraint(con)
+                }
             }
         }else {
 //            child.contentMode = UIViewContentMode.scaleToFill
@@ -686,6 +673,11 @@ public enum RelativeLayoutSide : Int {
 
 class RelativeLayout : UIView {
 
+}
+
+
+class LinearLayout : UIView {
+    
 }
 
 
